@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="ECommercePlatform.Api/ECommercePlatform.Api.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="ECommercePlatform.Application/ECommercePlatform.Application.csproj" />
+    <Project Path="ECommercePlatform.Domain/ECommercePlatform.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="ECommercePlatform.Identity/ECommercePlatform.Identity.csproj" />
+    <Project Path="ECommercePlatform.Infrastructure/ECommercePlatform.Infrastructure.csproj" />
+    <Project Path="ECommercePlatform.Persistence/ECommercePlatform.Persistence.csproj" />
+  </Folder>
+</Solution>
