@@ -15,16 +15,26 @@ namespace ECommercePlatform.Infrastructure.Services
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public ProductService(IMapper mapper,
-            IProductRepository productRepository)
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository)
         {
             _mapper = mapper;
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<List<GetProductsDto>> GetAsync(int categoryId, PaginationDto dto)
         {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            
+            if (category == null)
+            {
+                throw new NotFoundException(nameof(Category), categoryId);
+            }
+
             var products = await _productRepository.GetAllByCategoryIdAsync(categoryId, dto.PageNumber, dto.PageSize);
             return _mapper.Map<List<GetProductsDto>>(products);
         }
@@ -45,8 +55,15 @@ namespace ECommercePlatform.Infrastructure.Services
 
 
 
-        public async Task<int> CreateAsync(CreateProductDto dto)
+        public async Task<int> CreateAsync(int categoryId, CreateProductDto dto)
         {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category == null)
+            {
+                throw new NotFoundException(nameof(Category), categoryId);
+            }
+
             // Validate the dto
             var validator = new CreateProductValidator();
             var validationResult = await validator.ValidateAsync(dto);
@@ -66,6 +83,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
 
             var product = _mapper.Map<Product>(dto);
+            product.CategoryId = categoryId;
             await _productRepository.CreateAsync(product);
             return product.Id;
         }

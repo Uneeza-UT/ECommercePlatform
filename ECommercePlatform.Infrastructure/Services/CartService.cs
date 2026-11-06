@@ -75,7 +75,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
             if (cart == null)
             {
-                throw new NotFoundException("Cart not found.");
+                await CreateAsync();
             }
 
 

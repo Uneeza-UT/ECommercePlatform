@@ -7,7 +7,7 @@ namespace ECommercePlatform.Application.Contracts.Services
     {
         Task<List<GetProductsDto>> GetAsync(int categoryId, PaginationDto dto);
         Task<GetProductsDto> GetByIdAsync(int id);
-        Task<int> CreateAsync(CreateProductDto dto);
+        Task<int> CreateAsync(int categoryId, CreateProductDto dto);
         Task UpdateAsync(int id, UpdateProductDto dto);
         Task DeleteAsync(int id);   
         Task<List<GetProductsDto>> SearchAsync(SearchDto dto, PaginationDto paginationDto);

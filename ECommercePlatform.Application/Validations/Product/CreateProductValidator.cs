@@ -7,11 +7,6 @@ namespace ECommercePlatform.Application.Validations.Product
     {
         public CreateProductValidator()
         {
-            RuleFor(p => p.CategoryId)
-               .NotEmpty().WithMessage("{PropertyName} is required.")
-               .GreaterThan(0).WithMessage("{PropertyName} must be greater than zero.");
-
-
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(100).WithMessage("{PropertyName} cannot exceed 100 characters.");

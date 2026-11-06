@@ -21,7 +21,7 @@ namespace ECommercePlatform.Api.Controllers
 
         [HttpGet("category/{categoryId}")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<List<GetProductsDto>>> Get(int categoryId, [FromQuery] PaginationDto dto)
+        public async Task<ActionResult<List<GetProductsDto>>> GetByCategory(int categoryId, [FromQuery] PaginationDto dto)
         {
             var products = await _productService.GetAsync(categoryId, dto);
 
@@ -43,7 +43,7 @@ namespace ECommercePlatform.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<GetProductsDto>> Get(int id)
+        public async Task<ActionResult<GetProductsDto>> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
             return Ok(product);
@@ -53,15 +53,15 @@ namespace ECommercePlatform.Api.Controllers
 
 
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("category/{categoryId}")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
-        public async Task<ActionResult> Post([FromBody] CreateProductDto dto)
+        public async Task<ActionResult> Post(int categoryId, [FromBody] CreateProductDto dto)
         {
-            var response = await _productService.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = response });
+            var response = await _productService.CreateAsync(categoryId, dto);
+            return CreatedAtAction(nameof(GetById), new { id = response });
         }
 
 
