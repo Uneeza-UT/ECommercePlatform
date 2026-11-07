@@ -342,11 +342,6 @@ namespace ECommercePlatform.Persistence.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("IsConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("OrderStatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()

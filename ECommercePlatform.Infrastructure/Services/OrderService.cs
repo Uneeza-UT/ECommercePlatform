@@ -451,7 +451,7 @@ namespace ECommercePlatform.Infrastructure.Services
             }
 
 
-            if (customerCoupon.ExpiryDate <= now)
+            if (customerCoupon.ExpiryDate <= now || coupon.CouponStatus == CouponStatus.Expired)
             {
                 throw new BadRequestException($"This coupon '{customerCoupon.Coupon.Code}' has already expired.");
             }

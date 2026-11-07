@@ -28,20 +28,6 @@ namespace ECommercePlatform.Api.Controllers
             var cart = await _cartService.GetAsync();
             return Ok(cart);
         }
-
-
-
-
-
-        [HttpPut]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult> Put([FromBody] AddCartItemDto dto)
-        {
-            await _cartService.AddItemToCartAsync(dto);
-            return NoContent();
-        }
+        
     }
 }

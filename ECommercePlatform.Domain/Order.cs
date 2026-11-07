@@ -12,7 +12,6 @@ namespace ECommercePlatform.Domain
         public decimal TotalAmount { get; set; }
         public PaymentType PaymentType { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public bool IsConfirmed { get; set; }
 
         public ShippingDetails ShippingDetails { get; set; } = null!;
         public CouponUsage? CouponUsage { get; set; }  

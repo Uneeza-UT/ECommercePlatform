@@ -39,15 +39,25 @@ namespace ECommercePlatform.Infrastructure.Services
                 throw new BadRequestException("Invalid delivery settings data. ", validationResult);
             }
 
+            var settings = await _deliverySettingsRepository.GetByIdAsync(1);
 
-            var settings = new DeliverySettings
+            if (settings == null)
             {
-                Id = 1,
-                CashOnDeliveryFee = dto.CashOnDeliveryFee,
-                OnlinePaymentDeliveryFee = dto.OnlinePaymentDeliveryFee
-            };
+                settings = new DeliverySettings
+                {
+                    CashOnDeliveryFee = dto.CashOnDeliveryFee,
+                    OnlinePaymentDeliveryFee = dto.OnlinePaymentDeliveryFee
+                };
 
-            await _deliverySettingsRepository.CreateAsync(settings);
+                await _deliverySettingsRepository.CreateAsync(settings);
+            }
+            else
+            {
+                settings.CashOnDeliveryFee = dto.CashOnDeliveryFee;
+                settings.OnlinePaymentDeliveryFee = dto.OnlinePaymentDeliveryFee;
+
+                await _deliverySettingsRepository.SaveChangesAsync();
+            }
 
             return settings.Id;
         }

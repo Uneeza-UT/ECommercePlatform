@@ -30,7 +30,7 @@ namespace ECommercePlatform.Infrastructure.Services
         {
             var category = await _categoryRepository.GetByIdAsync(categoryId);
             
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 throw new NotFoundException(nameof(Category), categoryId);
             }
@@ -59,7 +59,7 @@ namespace ECommercePlatform.Infrastructure.Services
         {
             var category = await _categoryRepository.GetByIdAsync(categoryId);
 
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 throw new NotFoundException(nameof(Category), categoryId);
             }
@@ -160,24 +160,36 @@ namespace ECommercePlatform.Infrastructure.Services
 
             switch (dto.SortBy)
             {
+                case SortOption.PriceLowestToHighest:
+                    descending = false;
+                    sortExpression = p => p.Price;
+                    break;
+
+
+                case SortOption.PriceHighestToLowest:
+                    descending = false;
+                    sortExpression = p => p.Price;
+                    break;
+
+
                 case SortOption.Ascending:
                     descending = false;
-                    sortExpression = i => i.Name;
+                    sortExpression = p => p.Name;
                     break;
 
                 case SortOption.Descending:
                     descending = true;
-                    sortExpression = i => i.Name;
+                    sortExpression = p => p.Name;
                     break;
 
                 case SortOption.Latest:
                     descending = true;
-                    sortExpression = i => i.CreatedAt;
+                    sortExpression = p => p.CreatedAt;
                     break;
 
                 case SortOption.Oldest:
                     descending = false;
-                    sortExpression = i => i.CreatedAt;
+                    sortExpression = p => p.CreatedAt;
                     break;
 
                 default:

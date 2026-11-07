@@ -1,4 +1,5 @@
 ﻿using ECommercePlatform.Application.Contracts.Services;
+using ECommercePlatform.Application.DTOs.CartItem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,20 @@ namespace ECommercePlatform.Api.Controllers
         {
             _cartItemService = cartItemService;
         }
+
+
+
+        [HttpPost("add-product")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> Post(int productId, [FromBody] AddCartItemDto dto)
+        {
+            var cartItems = await _cartItemService.AddItemToCartAsync(productId, dto);
+            return Created("", cartItems);
+        }
+
 
 
 

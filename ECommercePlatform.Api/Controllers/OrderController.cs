@@ -8,7 +8,6 @@ namespace ECommercePlatform.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin, Customer")]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -19,6 +18,7 @@ namespace ECommercePlatform.Api.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, Customer")]
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(403)]
@@ -41,6 +41,7 @@ namespace ECommercePlatform.Api.Controllers
 
 
 
+        [Authorize(Roles = "Admin, Customer")]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(403)]

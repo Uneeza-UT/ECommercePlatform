@@ -8,12 +8,10 @@ namespace ECommercePlatform.Application.Validations.DeliverySettings
         public CreateDeliverySettingsValidator()
         {
             RuleFor(ds => ds.CashOnDeliveryFee)
-               .NotEmpty().WithMessage("{PropertyName} is required.")
                .GreaterThan(0).WithMessage("{PropertyName} must be greater than zero.");
 
 
             RuleFor(ds => ds.OnlinePaymentDeliveryFee)
-               .NotEmpty().WithMessage("{PropertyName} is required.")
                .GreaterThan(0).WithMessage("{PropertyName} must be greater than zero.");
         }
     }

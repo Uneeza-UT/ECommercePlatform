@@ -27,9 +27,6 @@ namespace ECommercePlatform.Persistence.Configurations
 
             builder.Property(o => o.DeliveryFee)
                 .HasPrecision(18, 2);
-
-            builder.Property(o => o.IsConfirmed)
-                .HasDefaultValue(false);
         }
     }
 }

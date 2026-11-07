@@ -26,12 +26,10 @@ namespace ECommercePlatform.Application.Validations.Product
 
 
             RuleFor(p => p.StockQuantity)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
                 .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} cannot be negative.");
 
 
             RuleFor(p => p.ProductsSold)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
                 .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} cannot be negative.");
 
 

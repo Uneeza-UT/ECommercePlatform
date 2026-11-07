@@ -38,7 +38,7 @@ namespace ECommercePlatform.Persistence.DatabaseContext
             foreach (var entry in base.ChangeTracker.Entries<BaseEntity>()
                 .Where(b => b.State == EntityState.Added))
             {
-                entry.Entity.CreatedAt = DateTime.Now;
+                entry.Entity.CreatedAt = DateTime.UtcNow;
             }
 
             return base.SaveChangesAsync(cancellationToken);

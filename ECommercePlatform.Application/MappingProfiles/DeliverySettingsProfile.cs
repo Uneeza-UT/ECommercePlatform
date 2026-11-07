@@ -10,6 +10,7 @@ namespace ECommercePlatform.Application.MappingProfiles
         {
             CreateMap<DeliverySettings, GetDeliverySettingsDto>();
             CreateMap<CreateDeliverySettingsDto, DeliverySettings>();
+            CreateMap<UpdateDeliverySettingsDto, DeliverySettings>();
         }
     }
 }

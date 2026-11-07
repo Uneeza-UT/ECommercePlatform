@@ -33,7 +33,7 @@ namespace ECommercePlatform.Infrastructure.Services
         {
             var category = await _categoryRepository.GetByIdWithProductsAsync(id);
 
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 throw new NotFoundException(nameof(Category), id);
             }

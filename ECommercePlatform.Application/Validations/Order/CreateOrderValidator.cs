@@ -32,7 +32,8 @@ namespace ECommercePlatform.Application.Validations.Order
 
 
             RuleForEach(o => o.OrderItems)
-                .SetValidator(new CreateOrderItemValidator());
+                .SetValidator(new CreateOrderItemValidator())
+                .When(o => !_currentUserService.IsAuthenticated);
 
 
             RuleFor(o => o.PaymentType)

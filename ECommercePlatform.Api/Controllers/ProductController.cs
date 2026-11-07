@@ -1,6 +1,7 @@
 ﻿using ECommercePlatform.Application.Contracts.Services;
 using ECommercePlatform.Application.DTOs.Common;
 using ECommercePlatform.Application.DTOs.Product;
+using ECommercePlatform.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,7 +44,7 @@ namespace ECommercePlatform.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<GetProductsDto>> GetById(int id)
+        public async Task<ActionResult<GetProductsDto>> Get(int id)
         {
             var product = await _productService.GetByIdAsync(id);
             return Ok(product);
@@ -61,7 +62,7 @@ namespace ECommercePlatform.Api.Controllers
         public async Task<ActionResult> Post(int categoryId, [FromBody] CreateProductDto dto)
         {
             var response = await _productService.CreateAsync(categoryId, dto);
-            return CreatedAtAction(nameof(GetById), new { id = response });
+            return Created("", response);
         }
 
 

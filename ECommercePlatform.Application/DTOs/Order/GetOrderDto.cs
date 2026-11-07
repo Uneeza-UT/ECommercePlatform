@@ -18,7 +18,6 @@ namespace ECommercePlatform.Application.DTOs.Order
         public decimal TotalAmount { get; set; }
         public PaymentType PaymentType { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public bool IsConfirmed { get; set; }  
         public DateTime CreatedAt { get; set; }
         public GetPaymentDto? Payment { get; set; }
         public List<GetOrderItemDto> OrderItems { get; set; } = new List<GetOrderItemDto>();   

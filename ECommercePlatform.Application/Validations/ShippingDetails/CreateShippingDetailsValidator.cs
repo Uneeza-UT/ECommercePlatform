@@ -46,7 +46,6 @@ namespace ECommercePlatform.Application.Validations.ShippingDetails
 
 
             RuleFor(sd => sd.PostalCode)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(100).WithMessage("{PropertyName} cannot exceed 100 characters.");
         }
     }
