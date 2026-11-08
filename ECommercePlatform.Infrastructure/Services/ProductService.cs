@@ -47,7 +47,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
         public async Task<GetProductsDto> GetByIdAsync(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdWithImagesAsync(id);
 
             if (product == null || product.IsDeleted)
             {
@@ -86,8 +86,15 @@ namespace ECommercePlatform.Infrastructure.Services
             }
 
 
-            var product = _mapper.Map<Product>(dto);
-            product.CategoryId = categoryId;
+            var product = new Product
+            {
+                CategoryId = categoryId,
+                Name = dto.Name,
+                Description = dto.Description,
+                Price = dto.Price,
+                StockQuantity = dto.StockQuantity,
+                DiscountPercentage = dto.DiscountPercentage
+            };
 
 
             // Add images to the product entity
@@ -117,7 +124,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
         public async Task UpdateAsync(int id, UpdateProductDto dto)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdWithImagesAsync(id);
 
             if (product == null || product.IsDeleted)
             {
@@ -141,7 +148,13 @@ namespace ECommercePlatform.Infrastructure.Services
                 throw new ConflictException("Product Name already exists.");
             }
 
-            _mapper.Map(dto, product);
+
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.Price = dto.Price;
+            product.StockQuantity = dto.StockQuantity;
+            product.ProductsSold = dto.ProductsSold;
+            product.DiscountPercentage = dto.DiscountPercentage;
             product.UpdatedAt = DateTime.UtcNow;
 
 
@@ -180,7 +193,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
         public async Task DeleteAsync(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdWithImagesAsync(id);
 
             if (product == null || product.IsDeleted)
             {

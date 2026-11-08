@@ -21,6 +21,7 @@ namespace ECommercePlatform.Persistence.Repositories
                 .AsNoTracking()
                 .Where(p => !p.IsDeleted)
                 .OrderByDescending(p => p.CreatedAt)
+                .Include(p => p.Images)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -35,9 +36,19 @@ namespace ECommercePlatform.Persistence.Repositories
                 .AsNoTracking()
                 .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
                 .OrderByDescending(p => p.CreatedAt)
+                .Include(p => p.Images)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+
+
+        public async Task<Product?> GetByIdWithImagesAsync(int id)
+        {
+            return await _dbContext.Set<Product>()
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
         }
 
 
@@ -47,6 +58,7 @@ namespace ECommercePlatform.Persistence.Repositories
         {
             return await _dbContext.Products
                 .Where(p => ids.Contains(p.Id) && !p.IsDeleted)
+                .Include(p => p.Images)
                 .ToListAsync();
         }
 
@@ -68,6 +80,7 @@ namespace ECommercePlatform.Persistence.Repositories
                 .Where(p =>!p.IsDeleted &&
                     (p.Name.Contains(searchTerm) ||
                     p.Description.Contains(searchTerm)))
+                .Include(p => p.Images)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -84,6 +97,7 @@ namespace ECommercePlatform.Persistence.Repositories
             query = descending ? query.OrderByDescending(keySelector) : query.OrderBy(keySelector);
 
             return await query
+                .Include(p => p.Images)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -105,6 +119,7 @@ namespace ECommercePlatform.Persistence.Repositories
             }
 
             return await query
+                .Include(p => p.Images)
                 .OrderByDescending(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

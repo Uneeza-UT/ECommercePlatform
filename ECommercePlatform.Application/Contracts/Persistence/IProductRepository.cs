@@ -8,6 +8,7 @@ namespace ECommercePlatform.Application.Contracts.Persistence
     {
         Task<IReadOnlyList<Product>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
         Task<IReadOnlyList<Product>> GetAllByCategoryIdAsync(int categoryId, int pageNumber = 1, int pageSize = 10);
+        Task<Product?> GetByIdWithImagesAsync(int id);
         Task<IReadOnlyList<Product>> GetAllByIdsAsync(List<int> ids);
         Task<bool> IsNameUnique(string name, int? excludeId = null);
         Task<IReadOnlyList<Product>> SearchAsync(string searchTerm, int pageNumber = 1, int pageSize = 10);
