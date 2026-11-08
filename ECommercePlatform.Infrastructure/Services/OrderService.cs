@@ -180,6 +180,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
                     // Update the stock quantity for each product in the order
                     product.StockQuantity -= cartItem.Quantity;
+                    product.ProductsSold = cartItem.Quantity;
                     product.UpdatedAt = DateTime.UtcNow;
                 }      
             }
@@ -208,6 +209,7 @@ namespace ECommercePlatform.Infrastructure.Services
 
                     // Update the stock quantity for each product in the order
                     product.StockQuantity -= item.Quantity;
+                    product.ProductsSold = item.Quantity;
                     product.UpdatedAt = DateTime.UtcNow;
                 }
             }

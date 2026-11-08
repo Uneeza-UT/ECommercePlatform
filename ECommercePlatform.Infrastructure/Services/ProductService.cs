@@ -8,6 +8,7 @@ using ECommercePlatform.Application.Exceptions;
 using ECommercePlatform.Application.Validations.Product;
 using ECommercePlatform.Domain;
 using System.Linq.Expressions;
+using System.Net.Mail;
 
 namespace ECommercePlatform.Infrastructure.Services
 {
@@ -16,14 +17,17 @@ namespace ECommercePlatform.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IFileStorageService _fileStorageService;
 
         public ProductService(IMapper mapper,
             IProductRepository productRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IFileStorageService fileStorageService)
         {
             _mapper = mapper;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<List<GetProductsDto>> GetAsync(int categoryId, PaginationDto dto)
@@ -84,6 +88,28 @@ namespace ECommercePlatform.Infrastructure.Services
 
             var product = _mapper.Map<Product>(dto);
             product.CategoryId = categoryId;
+
+
+            // Add images to the product entity
+
+            if (dto.Images.Count != 0)
+            {
+                foreach (var file in dto.Images)
+                {
+                    var filePath = await _fileStorageService.SaveFileAsync(file);
+
+                    var image = new Image
+                    {
+                        FileName = file.FileName,
+                        FilePath = filePath,
+                        ContentType = file.ContentType
+                    };
+
+                    product.Images.Add(image);
+                }
+            }
+
+
             await _productRepository.CreateAsync(product);
             return product.Id;
         }
@@ -118,7 +144,36 @@ namespace ECommercePlatform.Infrastructure.Services
             _mapper.Map(dto, product);
             product.UpdatedAt = DateTime.UtcNow;
 
+
+            // Update images in the product entity
+
+            if (dto.Images.Count != 0)
+            {
+                foreach (var file in dto.Images)
+                {
+                    var filePath = await _fileStorageService.SaveFileAsync(file);
+
+                    var image = new Image
+                    {
+                        FileName = file.FileName,
+                        FilePath = filePath,
+                        ContentType = file.ContentType
+                    };
+
+                    product.Images.Add(image);
+                }
+            }
+
+
             await _productRepository.SaveChangesAsync();
+
+
+            var filePaths = product.Images
+                .Select(a => a.FilePath)
+                .ToList();
+
+
+            await _fileStorageService.DeleteFilesAsync(filePaths);
         }
 
 
@@ -132,9 +187,17 @@ namespace ECommercePlatform.Infrastructure.Services
                 throw new NotFoundException(nameof(Product), id);
             }
 
-            product.IsDeleted = true;
+            product.IsDeleted = true;  
 
             await _productRepository.SaveChangesAsync();
+
+
+            var filePaths = product.Images
+                .Select(a => a.FilePath)
+                .ToList();
+
+
+            await _fileStorageService.DeleteFilesAsync(filePaths);
         }
 
 

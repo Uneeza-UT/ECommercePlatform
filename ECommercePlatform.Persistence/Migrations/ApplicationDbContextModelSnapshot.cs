@@ -323,6 +323,42 @@ namespace ECommercePlatform.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ECommercePlatform.Domain.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("ECommercePlatform.Domain.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -456,10 +492,6 @@ namespace ECommercePlatform.Persistence.Migrations
                     b.Property<decimal?>("DiscountPercentage")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -609,6 +641,17 @@ namespace ECommercePlatform.Persistence.Migrations
                     b.Navigation("Coupon");
                 });
 
+            modelBuilder.Entity("ECommercePlatform.Domain.Image", b =>
+                {
+                    b.HasOne("ECommercePlatform.Domain.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ECommercePlatform.Domain.OrderItem", b =>
                 {
                     b.HasOne("ECommercePlatform.Domain.Order", "Order")
@@ -689,6 +732,11 @@ namespace ECommercePlatform.Persistence.Migrations
 
                     b.Navigation("ShippingDetails")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ECommercePlatform.Domain.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

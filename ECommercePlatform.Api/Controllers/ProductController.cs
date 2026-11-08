@@ -59,7 +59,7 @@ namespace ECommercePlatform.Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
-        public async Task<ActionResult> Post(int categoryId, [FromBody] CreateProductDto dto)
+        public async Task<ActionResult> Post(int categoryId, [FromForm] CreateProductDto dto)
         {
             var response = await _productService.CreateAsync(categoryId, dto);
             return Created("", response);
@@ -77,7 +77,7 @@ namespace ECommercePlatform.Api.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> Put(int id, [FromBody] UpdateProductDto dto)
+        public async Task<ActionResult> Put(int id, [FromForm] UpdateProductDto dto)
         {
             await _productService.UpdateAsync(id, dto);
             return NoContent();

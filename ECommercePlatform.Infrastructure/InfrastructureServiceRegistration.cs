@@ -31,6 +31,7 @@ namespace ECommercePlatform.Infrastructure
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<ICustomerCouponService, CustomerCouponService>();
             services.AddScoped<IDeliverySettingsService, DeliverySettingsService>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddHostedService<CouponStatusChangeService>();

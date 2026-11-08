@@ -67,6 +67,22 @@ namespace ECommercePlatform.Identity
 
                     options.Events = new JwtBearerEvents
                     {
+                        OnChallenge = async context =>
+                        {
+                            // Prevent the default JWT challenge response.
+                            context.HandleResponse();
+
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Response.ContentType = "application/json";
+
+                            await context.Response.WriteAsJsonAsync(new
+                            {
+                                StatusCode = 401,
+                                message = "You must be registered and logged in to perform this action."
+                            });
+                        },
+
+
                         OnForbidden = async context =>
                         {
                             context.Response.StatusCode = StatusCodes.Status403Forbidden;

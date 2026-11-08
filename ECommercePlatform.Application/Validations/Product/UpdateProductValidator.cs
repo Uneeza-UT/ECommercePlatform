@@ -16,9 +16,6 @@ namespace ECommercePlatform.Application.Validations.Product
                 .NotEmpty().WithMessage("{PropertyName} is required.");
 
 
-            RuleFor(p => p.ImageUrl)
-                .NotEmpty().WithMessage("{PropertyName} is required.");
-
 
             RuleFor(p => p.Price)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
@@ -42,7 +39,12 @@ namespace ECommercePlatform.Application.Validations.Product
             RuleFor(p => p.DiscountPercentage)
                 .LessThanOrEqualTo(100)
                 .When(p => p.DiscountPercentage.HasValue)
-                .WithMessage("{PropertyName} cannot exceed 100%.");   
+                .WithMessage("{PropertyName} cannot exceed 100%.");
+
+
+            RuleFor(p => p)
+               .Must(p => p.Images?.Any() ?? false)
+               .WithMessage("A product must contain at least one image.");
         }
     }
 }
