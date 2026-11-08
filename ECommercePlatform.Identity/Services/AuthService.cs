@@ -1,5 +1,6 @@
 ﻿using ECommercePlatform.Application.Contracts.Email;
 using ECommercePlatform.Application.Contracts.Identity;
+using ECommercePlatform.Application.Contracts.Persistence;
 using ECommercePlatform.Application.Contracts.Services;
 using ECommercePlatform.Application.DTOs.Coupon;
 using ECommercePlatform.Application.DTOs.Identity;
@@ -7,6 +8,7 @@ using ECommercePlatform.Application.Exceptions;
 using ECommercePlatform.Application.Models.Email;
 using ECommercePlatform.Application.Models.Identity;
 using ECommercePlatform.Application.Validations.Identity;
+using ECommercePlatform.Domain;
 using ECommercePlatform.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -23,7 +25,7 @@ namespace ECommercePlatform.Identity.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtSettings _jwtSettings;
         private readonly ICurrentUserService _currentUserService;
-        private readonly ICartService _cartService;
+        private readonly ICartRepository _cartRepository;
         private readonly ICouponService _couponService;
         private readonly IEmailSender _emailSender;
 
@@ -32,7 +34,7 @@ namespace ECommercePlatform.Identity.Services
             SignInManager<ApplicationUser> signInManager,
             IOptions<JwtSettings> jwtSettings,
             ICurrentUserService currentUserService,
-            ICartService cartService,
+            ICartRepository cartRepository,
             ICouponService couponService,
             IEmailSender emailSender)
         {
@@ -40,7 +42,7 @@ namespace ECommercePlatform.Identity.Services
             _signInManager = signInManager;
             _jwtSettings = jwtSettings.Value;
             _currentUserService = currentUserService;
-            _cartService = cartService;
+            _cartRepository = cartRepository;
             _couponService = couponService;
             _emailSender = emailSender;
         }
@@ -173,8 +175,14 @@ namespace ECommercePlatform.Identity.Services
             // Assign the selecetd role to the new user.
             await _userManager.AddToRoleAsync(user, "Customer");
 
+
+            var cart = new Cart
+            {
+                UserId = user.Id
+            };
+
             // Create a cart for the new User
-            await _cartService.CreateAsync();
+            await _cartRepository.CreateAsync(cart);
 
 
             // Assign the "WELCOME2026" coupon to the new user

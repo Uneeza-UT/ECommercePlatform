@@ -8,7 +8,6 @@ using ECommercePlatform.Application.Exceptions;
 using ECommercePlatform.Application.Validations.Product;
 using ECommercePlatform.Domain;
 using System.Linq.Expressions;
-using System.Net.Mail;
 
 namespace ECommercePlatform.Infrastructure.Services
 {
@@ -190,6 +189,33 @@ namespace ECommercePlatform.Infrastructure.Services
 
 
             await _fileStorageService.DeleteFilesAsync(filePaths);
+        }
+
+
+        public async Task RestockAsync(int id, RestockProductDto dto)
+        {
+            var product = await _productRepository.GetByIdWithImagesAsync(id);
+
+            if (product == null || product.IsDeleted)
+            {
+                throw new NotFoundException(nameof(Product), id);
+            }
+
+            // Validate the dto
+            var validator = new RestockProductValidator();
+            var validationResult = await validator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                throw new BadRequestException("Invalid entity. ", validationResult);
+            }
+
+
+            product.StockQuantity = dto.StockQuantity;
+            product.UpdatedAt = DateTime.UtcNow;
+
+            await _productRepository.SaveChangesAsync();
+
         }
 
 

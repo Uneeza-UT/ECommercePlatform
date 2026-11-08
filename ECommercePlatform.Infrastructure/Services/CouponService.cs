@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using ECommercePlatform.Application.Contracts.Email;
 using ECommercePlatform.Application.Contracts.Persistence;
 using ECommercePlatform.Application.Contracts.Services;
 using ECommercePlatform.Application.DTOs.Common;
 using ECommercePlatform.Application.DTOs.Coupon;
 using ECommercePlatform.Application.Exceptions;
+using ECommercePlatform.Application.Models.Email;
 using ECommercePlatform.Application.Validations.Coupon;
 using ECommercePlatform.Domain;
 using ECommercePlatform.Domain.Enums;
@@ -21,18 +23,21 @@ namespace ECommercePlatform.Infrastructure.Services
         private readonly ICustomerCouponRepository _customerCouponRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
         public CouponService(IMapper mapper,
             ICouponRepository couponRepository,
             ICustomerCouponRepository customerCouponRepository,
             IUnitOfWork unitOfWork,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender)
         {
             _mapper = mapper;
             _couponRepository = couponRepository;
             _customerCouponRepository = customerCouponRepository;
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         public async Task<List<GetCouponDto>> GetAsync(PaginationDto dto)
@@ -184,9 +189,11 @@ namespace ECommercePlatform.Infrastructure.Services
                 : dto.GuestEmail.Trim().ToLowerInvariant();
 
 
+            ApplicationUser user = null;
+
             if (!string.IsNullOrWhiteSpace(dto.CustomerId))
             {
-                var user = await _userManager.FindByIdAsync(dto.CustomerId);
+                user = await _userManager.FindByIdAsync(dto.CustomerId);
 
                 if (user == null)
                 {
@@ -274,6 +281,7 @@ namespace ECommercePlatform.Infrastructure.Services
                 coupon.AssignedCount++;
                 await _couponRepository.SaveChangesAsync();
 
+
                 await _unitOfWork.CommitTransactionAsync();
             }
 
@@ -292,6 +300,48 @@ namespace ECommercePlatform.Infrastructure.Services
                 await _unitOfWork.RollbackTransactionAsync();
                 throw;
             }
+
+
+            var emailAddress = user == null ? guestEmail : user.Email;
+
+
+            var discount = coupon.CouponType switch
+            {
+                CouponType.Percentage =>
+                    $"{coupon.DiscountPercentage}% OFF",
+
+                CouponType.FixedAmount =>
+                    $"Rs. {coupon.DiscountAmount:N2} OFF",
+
+                _ => "Special Discount"
+            };
+
+
+            var maximumDiscount = coupon.MaximumDiscount.HasValue
+                ? $"{coupon.MaximumDiscount:N2}"
+                : null;
+
+
+            await _emailSender.SendEmailAsync(new EmailMessageData
+            {
+                To = emailAddress!,
+                Subject = "You've Received a Special Discount Coupon!",
+                Body = $"Hello Customer,\n\n" +
+                        "Great news! We've assigned a special discount coupon to your account.\n" +
+                        "Your Coupon Details:\n\n" +
+                        $"Coupon Code: {coupon.Code}\n" +
+                        $"Discount: {discount}\n" +
+                        $"Minimum Order Amount: Rs. {coupon.MinimumOrderAmount}\n" +
+                        $"Maximum Discount: Rs. {maximumDiscount}\n" +
+                        $"Valid Until: {expiryDate}\n\n" +
+                        "You can use this coupon during checkout to enjoy your discount on your next purchase.\n" +
+                        "Simply enter the coupon code in the coupon field at checkout, and your discount will be" +
+                        "applied if your order meets the coupon requirements.\n\n" +
+                        "Don't miss out! Make sure to use your coupon before it expires.\n\n" +
+                        "Thank you for shopping with us!\n\n" +
+                        "Best regards,\n" +
+                        "The E-Commerce Team"
+            });
         }
 
 

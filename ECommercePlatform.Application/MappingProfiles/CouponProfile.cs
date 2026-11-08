@@ -9,6 +9,7 @@ namespace ECommercePlatform.Application.MappingProfiles
         public CouponProfile()
         {
             CreateMap<Coupon, GetCouponDto>();
+            CreateMap<Coupon, GetCouponForCustomerDto>();
             CreateMap<CreateCouponDto, Coupon>();
             CreateMap<UpdateCouponDto, Coupon>();
         }

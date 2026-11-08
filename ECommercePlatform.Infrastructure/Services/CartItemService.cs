@@ -40,6 +40,11 @@ namespace ECommercePlatform.Infrastructure.Services
                 throw new NotFoundException(nameof(Product), productId);
             }
 
+            if (product.StockQuantity == 0)
+            {
+                throw new BadRequestException("This product is out of stock");
+            }
+
 
             // Validate the dto
             var validator = new AddCartItemValidator();

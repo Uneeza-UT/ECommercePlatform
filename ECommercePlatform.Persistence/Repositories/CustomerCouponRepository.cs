@@ -17,9 +17,10 @@ namespace ECommercePlatform.Persistence.Repositories
             string customerId, int pageNumber = 1, int pageSize = 10)
         {
             return await _dbContext.Set<CustomerCoupon>()
-                .AsNoTracking()
+                .AsNoTracking()       
                 .Where(cc => cc.CustomerId == customerId)
                 .OrderByDescending(cc => cc.AssignedAt)
+                .Include(cc => cc.Coupon)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

@@ -1,7 +1,6 @@
 ﻿using ECommercePlatform.Application.Contracts.Services;
 using ECommercePlatform.Application.DTOs.Common;
 using ECommercePlatform.Application.DTOs.Product;
-using ECommercePlatform.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -76,7 +75,6 @@ namespace ECommercePlatform.Api.Controllers
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
-        [ProducesDefaultResponseType]
         public async Task<ActionResult> Put(int id, [FromForm] UpdateProductDto dto)
         {
             await _productService.UpdateAsync(id, dto);
@@ -88,13 +86,28 @@ namespace ECommercePlatform.Api.Controllers
 
 
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("restock/{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> Restock(int id, [FromBody] RestockProductDto dto)
+        {
+            await _productService.RestockAsync(id, dto);
+            return NoContent();
+        }
+
+
+
+
+
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        [ProducesDefaultResponseType]
         public async Task<ActionResult> Delete(int id)
         {
             await _productService.DeleteAsync(id);
