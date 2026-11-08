@@ -148,6 +148,8 @@ namespace ECommercePlatform.Infrastructure.Services
                 throw new ConflictException("Product Name already exists.");
             }
 
+            var oldImages = product.Images.ToList();
+
 
             product.Name = dto.Name;
             product.Description = dto.Description;
@@ -156,6 +158,7 @@ namespace ECommercePlatform.Infrastructure.Services
             product.ProductsSold = dto.ProductsSold;
             product.DiscountPercentage = dto.DiscountPercentage;
             product.UpdatedAt = DateTime.UtcNow;
+            product.Images.Clear();
 
 
             // Update images in the product entity
@@ -181,7 +184,7 @@ namespace ECommercePlatform.Infrastructure.Services
             await _productRepository.SaveChangesAsync();
 
 
-            var filePaths = product.Images
+            var filePaths = oldImages
                 .Select(a => a.FilePath)
                 .ToList();
 

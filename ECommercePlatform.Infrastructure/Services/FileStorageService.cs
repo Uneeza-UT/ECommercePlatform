@@ -20,7 +20,7 @@ namespace ECommercePlatform.Infrastructure.Services
             Directory.CreateDirectory(folderPath);
 
             var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{file.FileName}-{Guid.NewGuid()}{extension}";
+            var fileName = $"{Guid.NewGuid()}{extension}";
 
             var physicalPath = Path.Combine(folderPath, fileName);
 

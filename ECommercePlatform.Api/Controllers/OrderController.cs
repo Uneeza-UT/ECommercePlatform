@@ -62,7 +62,7 @@ namespace ECommercePlatform.Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> Post([FromForm] CreateOrderDto dto)
+        public async Task<ActionResult> Post([FromBody] CreateOrderDto dto)
         {
             var response = await _orderService.CreateAsync(dto);
             return CreatedAtAction(nameof(Get), new { id = response });
