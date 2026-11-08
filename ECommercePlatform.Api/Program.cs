@@ -65,6 +65,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 
 // Configure the HTTP request pipeline.
 
