@@ -69,7 +69,6 @@ app.UseHttpsRedirection();
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
-app.UseSwagger();
 
 app.UseSwaggerUI(options =>
 {
