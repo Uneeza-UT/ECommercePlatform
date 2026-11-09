@@ -392,6 +392,7 @@ settings, including:
 
 -   SQL Server connection string
 -   JWT settings
+-   Resend API key
 
 Example configuration:
 
