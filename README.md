@@ -409,8 +409,8 @@ Example configuration:
   },
   "EmailSettings": {
     "ApiKey": "your-secret-key",
-    "FromAddress": "your-email-provider-email-address",
-    "FromName": "your-email-provider-name"
+    "FromAddress": "your-verified-sender-email",
+    "FromName": "your-sender-name"
   }
 }
 ```
