@@ -545,6 +545,22 @@ A typical testing flow is:
 
 ------------------------------------------------------------------------
 
+## Test Accounts
+
+The following demo accounts are pre-configured through the application's database seeding configuration and can be used to test the different user roles.
+
+### Customer
+Email: customer@example.com
+Password: Customer1234!
+
+### Admin
+Email: admin@example.com
+Password: Admin1234!
+
+ 
+
+------------------------------------------------------------------------
+
 ## Project Status
 
 The project is an ASP.NET Core e-commerce backend API.
