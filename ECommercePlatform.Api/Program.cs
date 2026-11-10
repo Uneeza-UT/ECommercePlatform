@@ -8,6 +8,15 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var webRootPath = Path.Combine(
+    builder.Environment.ContentRootPath,
+    "wwwroot"
+);
+
+Directory.CreateDirectory(webRootPath);
+
+builder.WebHost.UseWebRoot(webRootPath);
+
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
